@@ -1,0 +1,276 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  height: 100%;
+  width: 100%;
+}
+.introContainer {
+  height: 190px;
+  position: fixed;
+  top: 50%; 
+  left: 20px; 
+  transform: translateY(-50%);
+  white-space: nowrap;
+  width: 90px;
+
+  background-color: rgb(236, 236, 236);
+  border-radius: 40px;
+  
+}
+.introWrapper {
+  border-radius: 50%;
+  width: 90px; 
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+.blogImage {
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+.githubImage{
+  cursor: pointer;
+  width: 52px;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.musicPlayerWrapper{
+  cursor: pointer;
+  width: 52px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+
+}
+.musicPlayer{
+  cursor: pointer;
+  width: 30px;
+  height: 70%;
+}
+
+.container {
+  min-height: 130vh;
+  width: 100%;
+  display: flex; /* 가로 배치 */
+  padding: 20px;
+  background-image: url('../images/khw_christmas.jpg');
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  flex-direction: column;
+  align-items: center; /* 세로 중앙 정렬 */
+}
+.myIntro {
+  width: 80%; /* 적절한 너비로 설정 */
+  max-width: 1500px; /* 최대 너비 설정 */
+  text-align: center;
+  font-weight: bold;
+  color: rgb(218, 218, 218); /* 초기 텍스트 색상 */
+  font-family: 'Mountains of Christmas', cursive;
+  text-shadow: 44px 4px 8px rgb(172, 0, 0); /* 초기 텍스트 쉐도우 색상 */
+  user-select: none;         
+  font-size: 200px;
+  margin: 200px auto 0;
+  animation: blinkText 2.5s infinite; /* 애니메이션 적용 */
+}
+
+@keyframes blinkText {
+  0%, 25%, 75%, 100% {
+    color: rgb(218, 218, 218); /* 텍스트 색상 */
+    text-shadow: 44px 4px 8px rgb(172, 0, 0); /* 텍스트 쉐도우 색상 */
+  }
+  50% {
+    color: rgb(172, 0, 0); /* 텍스트 색상 */
+    text-shadow: 44px 4px 8px rgb(218, 218, 218); /* 텍스트 쉐도우 색상 */
+  }
+}
+.nameText{
+  width: 1500px;
+}
+
+.ChristmasText{
+  width: 1500px;
+}
+@keyframes blinkTextt {
+  0%, 100% {
+    text-shadow: 4px 4px 8px rgb(172, 0, 0); /* 텍스트 쉐도우 색상 */
+  }
+  50% {
+    text-shadow: 4px 4px 8px rgb(255, 235, 9); /* 텍스트 쉐도우 색상 */
+  }
+}
+.musicListContainer {
+  width: auto; /* 적절한 너비로 설정 */
+  max-width: 1000px; /* 최대 너비 설정 */
+  margin: 200px auto 0;
+  border-radius: 10px;
+  padding-left: 20px;
+  padding-bottom: 20px;
+  overflow-y: auto;
+  color: white;
+  font-family: 'Lora', serif;
+  font-weight: bold;
+  scrollbar-width:none;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6%;
+  animation: blinkTextt 1s infinite; /* 애니메이션 적용 */
+
+
+  box-shadow: 
+  0 -10px 10px -5px rgba(255, 0, 0, 0.5), /* 위쪽 그림자 */
+  0 10px 10px -5px rgba(255, 0, 0, 0.5);  /* 아래쪽 그림자 */
+
+}
+.song{
+  width: auto;
+  min-width: 700px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  font-size: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.song:hover{
+  color:  rgb(182, 0, 0) ;
+}
+
+
+.inputFormContainer{
+  width: 100%;
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  margin-top: 80px;
+
+}
+
+.inputForm {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  max-width: 600px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+}
+
+.inputForm input {
+  flex: 1; /* 각 입력 필드의 크기를 균등하게 설정 */
+  min-width: 500px; /* 최소 너비 */
+  min-height: 50px;
+  padding: 10px; /* 내부 여백 */
+  font-size: 16px; /* 글씨 크기 */
+  border: 1px solid #ccc; /* 얇은 테두리 */
+  border-radius: 5px; /* 둥근 모서리 */
+  box-sizing: border-box; /* 패딩 포함 크기 계산 */
+  margin-bottom: 20px;
+}
+
+.inputForm button {
+  padding: 10px 20px; /* 내부 여백 */
+  font-size: 16px; /* 글씨 크기 */
+  min-height: 50px;
+  color: white; /* 글씨 색 */
+  background-color: rgb(218, 0, 0); /* 파란색 배경 */
+  border: none; /* 테두리 제거 */
+  border-radius: 5px; /* 둥근 모서리 */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.inputForm button:hover {
+  background-color: rgb(146, 0, 0);
+}
+.musicInfo{
+  display: flex;
+  width: 100%;
+  padding-top: 100px;
+  justify-content: space-around;
+  
+}
+
+.songInfo{
+  flex: 1; /* 각 요소가 동일한 비율로 공간을 차지하도록 설정 */
+  max-width: 27%; /* 최대 너비를 33.33%로 설정 */
+  box-sizing: border-box; /* 패딩과 보더를 포함한 전체 너비 계산 */
+  margin-top: 90px;
+  margin-left: 10px; /* 요소 간의 간격을 위해 약간의 여백 설정 */
+  margin-right: 10px; 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 
+  0 -10px 10px -5px rgba(146, 0, 0, 0.5), /* 위쪽 그림자 */
+  0 10px 10px -5px rgba(146, 0, 0, 0.5);  /* 아래쪽 그림자 */
+}
+.songInfo:hover {
+  box-shadow: 
+  0 -20px 20px -10px rgba(98, 0, 0, 0.5), /* 위쪽 그림자 */
+  0 20px 20px -10px rgba(98, 0, 0, 0.5);  /* 아래쪽 그림자 */
+}
+
+.albumContainer{
+
+}
+
+
+.albumURL{
+  width: 600px; /* 원하는 너비 */
+  height: 600px; /* 원하는 높이 */
+  object-fit: cover; /* 이미지 비율을 유지하면서 잘라냄 */
+  border-radius: 6%;
+}
+.songInfoText{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+.songName{
+  font-size: 30px;
+  font-weight: bold;
+  user-select: none;
+  color: black;
+}
+.singer{
+  font-size: 30px;
+  font-weight: bold;
+  user-select: none;
+  color: black;      
+}
+.hyperLink{
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
+.mySelfContainer{
+  color: white;
+  font-size: 30px;
+  font-weight: bold;
+  bottom: 20px;
+  right: 20px;
+  position: fixed;
+
+}

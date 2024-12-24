@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Mountains+of+Christmas&display=swap"
+      rel="stylesheet"
+    />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="khw_playlist.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="../config.js"></script>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js";
+      import {
+        getFirestore,
+        collection,
+        query,
+        orderBy,
+        onSnapshot,
+        addDoc,
+        where,
+        getDocs,
+      } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+      const firebaseConfig = window.firebaseConfig;
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+      const db = getFirestore(app);
+
+      //페이지의 모든 요소가 로드 된 후 실행되는 이벤트 핸들러
+      window.onload = function () {
+        // URL에서 사용자 이름 가져오기
+        const urlParams = new URLSearchParams(window.location.search);
+        const userName = urlParams.get("userName");
+
+        // Firebase에서 실시간으로 노래 데이터를 받아와 화면에 표시
+        if (userName) {
+          getSongsFromFirebase(userName);
+          document
+            .getElementById("saveButton")
+            .setAttribute("onclick", `saveSongToFirebase('${userName}')`);
+        }
+      };
+
+      function getSongsFromFirebase(userName) {
+        const musicListContainer = document.querySelector(
+          ".musicListContainer"
+        );
+
+        const songsCollection = collection(db, userName); // userName을 컬렉션 이름으로 사용
+        const songsQuery = query(songsCollection, orderBy("songName")); // songName 기준 정렬
+
+        onSnapshot(songsQuery, (querySnapshot) => {
+          // 기존 목록 초기화
+          musicListContainer.innerHTML = "";
+
+          querySnapshot.forEach((doc) => {
+            const songData = doc.data();
+            const songElement = document.createElement("div");
+            songElement.classList.add("song");
+            songElement.innerText = `${songData.songName} - ${songData.singer}`;
+
+            // 클릭 시 해당 정보로 스크롤
+            songElement.addEventListener("click", function () {
+              scrollToSongInfo(songData.songName);
+            });
+
+            musicListContainer.appendChild(songElement);
+
+            // 노래 정보 섹션 추가
+            addSongInfoSection(songData);
+          });
+        });
+      }
+
+      function scrollToSongInfo(songTitle) {
+        const songTitleFormatted = songTitle.replace(/\s+/g, "-");
+        const songInfoElement = document.querySelector(
+          `#info-${songTitleFormatted}`
+        );
+        if (songInfoElement) {
+          songInfoElement.scrollIntoView({ behavior: "smooth" });
+        }
+      }
+
+      function addSongInfoSection(songData) {
+        const musicInfo = document.querySelector(".musicInfo");
+        const songTitleFormatted = songData.songName.replace(/\s+/g, "-");
+
+        // 노래 정보 섹션 생성
+        if (!document.querySelector(`#info-${songTitleFormatted}`)) {
+          const songInfoDiv = document.createElement("div");
+          songInfoDiv.id = `info-${songTitleFormatted}`;
+          songInfoDiv.classList.add("songInfo");
+
+          songInfoDiv.innerHTML = `
+            <div class="albumContainer">
+              <a href="${songData.hyperLink}" class="hyperLink" target="_blank">
+                <img class="albumURL" src="${songData.albumURL}" alt="Album Image"/>
+                
+                <div class="songInfoText">
+                  <p>
+                      <span class="songName">${songData.songName} - </span>
+                      <span class="singer">${songData.singer}</span>
+                  </p>
+                </div>
+              </a>
+            </div>`;
+
+          musicInfo.appendChild(songInfoDiv);
+        } else {
+          // 이미 존재하는 경우 업데이트
+          const songInfoDiv = document.querySelector(
+            `#info-${songTitleFormatted}`
+          );
+          songInfoDiv.innerHTML = `
+            <div class="albumContainer">
+              <a href="${songData.hyperLink}" class="hyperLink" target="_blank">
+                <img class="albumURL" src="${songData.albumURL}" alt="Album Image"/>
+                
+                <div class="songInfoText">
+                  <p>
+                      <span class="songName">${songData.songName} - </span>
+                      <span class="singer">${songData.singer}</span>
+                  </p>
+                </div>
+              </a>
+            </div>`;
+        }
+      }
+
+      window.saveSongToFirebase = function (userName) {
+        // 입력 필드에서 값 가져오기
+        const albumURL = document.getElementById("albumURL").value.trim();
+        const songName = document.getElementById("songName").value.trim();
+        const singer = document.getElementById("singer").value.trim();
+        const hyperLink = document.getElementById("hyperLink").value.trim();
+
+        // 모든 필드가 채워졌는지 확인
+        if (!albumURL || !songName || !singer || !hyperLink) {
+          alert("모든 필드를 입력해주세요!");
+          return;
+        }
+
+        const songsCollection = collection(db, userName);
+
+        // 이미 존재하는 노래인지 확인
+        const songQuery = query(
+          songsCollection,
+          where("songName", "==", songName),
+          where("singer", "==", singer)
+        );
+
+        getDocs(songQuery)
+          .then((querySnapshot) => {
+            if (!querySnapshot.empty) {
+              // 중복된 노래가 존재하는 경우
+              alert("이미 동일한 제목과 가수의 노래가 존재합니다.");
+            } else {
+              // 중복되지 않으면 Firestore에 저장
+              addDoc(songsCollection, {
+                albumURL,
+                songName,
+                singer,
+                hyperLink,
+              })
+                .then(() => {
+                  alert("노래가 성공적으로 저장되었습니다!");
+                  // 입력 필드 초기화
+                  document.getElementById("albumURL").value = "";
+                  document.getElementById("songName").value = "";
+                  document.getElementById("singer").value = "";
+                  document.getElementById("hyperLink").value = "";
+
+                  addSongInfoSection({
+                    albumURL,
+                    songName,
+                    singer,
+                    hyperLink,
+                  });
+                })
+                .catch((error) => {
+                  console.error("노래 저장 중 오류 발생:", error);
+                  alert("노래 저장에 실패했습니다.");
+                });
+            }
+          })
+          .catch((error) => {
+            console.error("Firestore 조회 중 오류 발생:", error);
+            alert("노래 중복 확인 중 오류가 발생했습니다.");
+          });
+      };
+
+
+      function toggleBackgroundMusic() {
+        const backgroundMusic = document.getElementById("backgroundMusic");
+        const playButton = document.getElementById("playButton");
+        if (backgroundMusic.paused) {
+          backgroundMusic.volume = 0.1; // 볼륨을 20%로 설정
+          backgroundMusic.play();
+          playButton.src = "../images/pause.png"; // 재생 중일 때는 정지 버튼 이미지로 변경
+        } else {
+          backgroundMusic.pause();
+          playButton.src = "../images/play.png"; // 일시정지 중일 때는 재생 버튼 이미지로 변경
+        }
+      }
+      window.toggleBackgroundMusic = toggleBackgroundMusic;
+    </script>
+  </head>
+  <body>
+    <aside class="introContainer">
+      <div
+        class="introWrapper"
+        onclick="window.location.href='https://ksng0185.tistory.com/';"
+      >
+        <img
+          src="../images/khw_tistory.png"
+          alt="Blog Image"
+          class="blogImage"
+        />
+      </div>
+      <div
+        class="introWrapper"
+        onclick="window.location.href='https://github.com/khw00185?tab=repositories';"
+      >
+        <img
+          src="../images/khw_github.png"
+          alt="github Image"
+          class="githubImage"
+        />
+      </div>
+      <div class="introWrapper">
+        <div class="musicPlayerWrapper" onclick="toggleBackgroundMusic()">
+          <img class="musicPlayer" id="playButton" src="../images/play.png" alt="play" />
+        </div>
+      </div>
+    </aside>
+    <div class="container">
+      <div class="myIntro">
+        <p class="nameText">khw's</p>
+        <p class="ChristmasText">Christmas PlayList</p>
+      </div>
+      <div class="musicListContainer"></div>
+      <div class="mySelfContainer">
+        <p>김형우(ISTP) 크리스마스에 듣기 좋은 플레이리스트</p>
+        <p>재생 버튼을 누르면 크리스마스 노래가 나와요</p>
+      </div>
+    </div>
+    <div class="musicInfo">
+      <!-- 노래 정보가 추가될 곳 -->
+    </div>
+    <div class="inputFormContainer">
+      <div class="inputForm">
+        <input type="text" id="albumURL" placeholder="앨범 사진 URL" />
+        <input type="text" id="songName" placeholder="노래 제목" />
+        <input type="text" id="singer" placeholder="가수" />
+        <input type="text" id="hyperLink" placeholder="하이퍼링크" />
+        <button id="saveButton">노래 저장</button>
+      </div>
+    </div>
+    <audio id="backgroundMusic" src="../music/Christmas Rap.mp3" loop></audio>
+  </body>
+</html>

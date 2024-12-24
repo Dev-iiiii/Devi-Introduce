@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dev I</title>
+
+    <link rel="stylesheet" href="main.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="config.js"></script>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js";
+      import {
+        getFirestore,
+        collection,
+        query,
+        orderBy,
+        onSnapshot,
+        addDoc,
+        where,
+        getDocs,
+      } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+      const firebaseConfig = window.firebaseConfig;
+
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+      const db = getFirestore(app);
+
+      window.onload = function () {
+        // 사용자 데이터를 사용하여 카드를 생성하고 추가
+        const userCardContainer = document.querySelector(".userCard");
+        const users = [
+          { url: "images/banner.jpg", userName: "khw", page: "pages/khw_playlist.html"},
+          { url: "images/banner.jpg", userName: "user2", page: "pages/khw_playlist.html" },
+          { url: "images/banner.jpg", userName: "user3", page: "pages/khw_playlist.html" }
+        ];
+
+        users.forEach(user => {
+          const userCard = document.createElement("div");
+          userCard.classList.add("userCardItem");
+
+          userCard.innerHTML = `
+            <img src="${user.url}" alt="${user.userName}" class="userImage" />
+            <p class="userName">${user.userName}의 플레이리스트</p>
+          `;
+
+          userCard.addEventListener("click", () => {
+            window.location.href = `${user.page}?userName=${user.userName}`;
+          });
+
+          userCardContainer.appendChild(userCard);
+        });
+      };
+
+    </script>
+
+
+  </head>
+  <body>
+    <div class="title">
+      <span class="Devi_logo">Dev I</span>
+    </div>
+    <div class="mainBanner">
+      <img class="bannerImg" src="images/banner.jpg" alt="banner" />
+    </div>
+
+    <div class="userCard">
+    </div>
+
+    <div class="chatContainer">
+      <div class="chatInput">
+        <div class="inputForm">
+            <input type="text" id="albumURL" placeholder="앨범 사진 URL" />
+            <input type="text" id="songName" placeholder="노래 제목" />
+            <input type="text" id="singer" placeholder="가수" />
+            <input type="text" id="hyperLink" placeholder="하이퍼링크" />
+            <button id="saveButton">노래 저장</button>
+          </div>
+      </div>
+      <div class="chatList"></div>
+    </div>
+  </body>
+</html>
