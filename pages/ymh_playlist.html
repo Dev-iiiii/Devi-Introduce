@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hoonsPlaylist</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Jua&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Roboto+Slab:wght@100..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+        * {
+            font-family: "Noto Sans";
+            color: white;
+        }
+
+        .header {
+            padding-bottom: 50px;
+        }
+
+        .container {
+            margin-top: 20px;
+        }
+
+        .main {
+            position: relative;
+            height: 400px;
+
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .intro {
+
+            position: absolute;
+            left: 50px;
+            bottom: 50px;
+        }
+
+        .reason {
+            min-height: 70px;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .playlistContainer {
+            position: absolute;
+            width: 250px;
+            top: 50px;
+            right: 50px;
+        }
+
+        .playlist {
+            height: 280px;
+            overflow-y: scroll;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            margin-bottom: 10px;
+        }
+
+        .addMusicContainer {
+            background-color: #75b798;
+            position: relative;
+            height: 290px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+
+            display: none;
+
+            padding: 50px;
+        }
+
+        .myIntroduce {
+            height: 350px;
+            margin-bottom: 50px;
+        }
+
+        .imageCard {
+            background-image: url('https://i.ibb.co/sW0VdHv/image.jpg');
+            background-position: center;
+            background-size: cover;
+
+            border-radius: 5px;
+        }
+
+        .introduceCard {
+            background-color: #343a40;
+
+            padding: 50px;
+            border-radius: 5px;
+        }
+
+        .badge {
+            height: 25px;
+            padding: 2px 5px 2px 5px;
+        }
+
+        .introduce {
+            min-height: 170px;
+        }
+
+        .miniBtn {
+            font-size: 12px;
+            padding: 2px 6px 2px 6px;
+            position: absolute;
+            right: 0px;
+        }
+
+        .addMusicBtn {
+            position: absolute;
+            right: 50px;
+        }
+    </style>
+    <script type="module">
+        // Firebase SDK 라이브러리 가져오기
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAhZi-FUAOWTRL_DdEK1NjcZqXN4-PrhmM",
+            authDomain: "sparta-9241f.firebaseapp.com",
+            projectId: "sparta-9241f",
+            storageBucket: "sparta-9241f.firebasestorage.app",
+            messagingSenderId: "986006692771",
+            appId: "1:986006692771:web:66a129cbb63acb25967016"
+        };
+
+
+        // Firebase 인스턴스 초기화
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        $("#addMusicBtn").click(async function () {
+            let title = $('#title').val();
+            let reason = $('#reason').val();
+            let url = $('#url').val();
+
+            let doc = {
+                'title': title,
+                'reason': reason,
+                'url': url
+            };
+            await addDoc(collection(db, "music_list_ymh"), doc);
+            alert('추천하신 노래가 리스트에 추가되었습니다 :)')
+            window.location.reload();
+        })
+
+        $(document).ready(function () {
+            $('#addBtn').click(function () {
+                $('#addMusicBox').toggle();
+            });
+        });
+
+        let docs = await getDocs(collection(db, "music_list_ymh"));
+        docs.forEach((doc) => {
+            let row = doc.data();
+            console.log(row);
+
+            let title = row['title'];
+            let reason = row['reason'];
+            let url = row['url'];
+            let musicId = extractYouTubeID(url);
+            let thumbnail = getYouTubeThumbnail(musicId);
+
+            console.log("동영상 ID:", musicId);
+            console.log("썸네일 URL:", thumbnail);
+
+            let temp_html = `
+            <a class="list-group-item list-group-item-action" href="#list-item-1"
+                    data-title="${title}" data-reason="${reason}" data-url="${url}" thumbnail="${thumbnail}">${title}</a>
+            `;
+
+            $('#list').append(temp_html);
+        });
+
+        function extractYouTubeID(url) {
+            const regExp = /^.*(youtu\.be\/|v\/|\/u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+            const match = url.match(regExp);
+            return match && match[2].length === 11 ? match[2] : null;
+        }
+
+        function getYouTubeThumbnail(videoId) {
+            return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+        }
+
+        const mainElement = document.querySelector('.main');
+        const playButton = document.querySelector('.intro .btn');
+
+        mainElement.style.backgroundImage = 'url(https://img.youtube.com/vi/YwlP423YduA/maxresdefault.jpg)';
+        mainElement.style.backgroundSize = 'cover';
+        mainElement.style.backgroundPosition = 'center';
+
+        playButton.setAttribute('data-url', 'https://www.youtube.com/watch?v=YwlP423YduA');
+
+        document.querySelector('#list').addEventListener('click', function (e) {
+            e.preventDefault();
+
+            const target = e.target.closest('.list-group-item');
+            if (target) {
+                const title = target.getAttribute('data-title');
+                const reason = target.getAttribute('data-reason');
+                const thumbnailUrl = target.getAttribute('thumbnail');
+
+                mainElement.style.backgroundImage = `url(${thumbnailUrl})`;
+                mainElement.style.backgroundSize = 'cover';
+                mainElement.style.backgroundPosition = 'center';
+
+                document.querySelector('.intro .title').textContent = title;
+                document.querySelector('.intro .reason').textContent = reason;
+                playButton.setAttribute('data-url', target.getAttribute('data-url'));
+            }
+        });
+
+        playButton.addEventListener('click', function() {
+            const activeUrl = this.getAttribute('data-url');
+            if (activeUrl){
+                window.open(activeUrl, '_blank');
+            } else{
+                alert('url이 설정되지 않았습니다!');
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <div class="header">
+        <!-- 헤더 들어가는 자리 -->
+    </div>
+    <main class="container">
+        <div class="main">
+            <div class="intro">
+                <h1 class="title">푸른하늘 - 눈물나는 날에는</h1>
+                <p class="reason">힘들 때 찾게 되는 노래, 안정적인 멜로디와 서정적인 가사가 마음을 편안하게 해줌.</p>
+                <button type="button" class="btn btn-outline-light">노래 듣기</button>
+            </div>
+            <div class="playlistContainer">
+                <div id="list" class="playlist">
+                    <a class="list-group-item list-group-item-action" href="#list-item-1" data-title="눈물나는 날에는"
+                        data-reason="힘들 때 찾게 되는 노래, 안정적인 멜로디와 서정적인 가사가 마음을 편안하게 해줌." data-url="https://www.youtube.com/watch?v=YwlP423YduA"
+                        thumbnail="https://img.youtube.com/vi/YwlP423YduA/maxresdefault.jpg">푸른하늘 - 눈물나는 날에는</a>
+
+                </div>
+                <button id="addBtn" type="button" class="btn btn-light miniBtn">add</button>
+            </div>
+        </div>
+        <div id="addMusicBox" class="addMusicContainer">
+            <div class="input-group mb-3">
+                <span class="input-group-text">가수 - 제목</span>
+                <input type="text" class="form-control" aria-label="Sizing example input"
+                    aria-describedby="inputGroup-sizing-default" id="title">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">추천 이유</span>
+                <input type="text" class="form-control" aria-label="Sizing example input"
+                    aria-describedby="inputGroup-sizing-default" id="reason">
+            </div>
+            <div class="input-group mb-3">
+                <span class="input-group-text">유튜브 URL</span>
+                <input type="text" class="form-control" aria-label="Sizing example input"
+                    aria-describedby="inputGroup-sizing-default" id="url">
+            </div>
+            <button id="addMusicBtn" type="button" class="btn btn-light addMusicBtn">추가하기</button>
+        </div>
+        <div class="row align-items-md-stretch">
+            <div class="col-md-4">
+                <div class="imageCard myIntroduce">
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="introduceCard myIntroduce">
+                    <h2>개발자 유명훈입니다.</h2>
+                    <div class="introduce">
+                        <p>안녕하세요. 게임 개발로 개발 커리어를 시작한 유명훈입니다. 다른 언어와 도메인에서 공부를 하다가 자바 스프링으로 전향했지만,
+                            개발자는 언어보다는 프레임워크를 이해하고 활용하는 능력이 중요하다고 생각하며 꾸준히 학습해왔습니다.
+                            그런 만큼 이번 과정을 잘 해낼 자신이 있으며, 특히 믿음직한 스파르타 내일배움캠프와 함께하게 되어 매우 든든합니다! ^^</p>
+                        <p>
+                            취미는 농구와 게임입니다. 농구는 하는 것도 좋아하고, 보는 것도 좋아하는데요. 요즘 NBA 시즌 중이라 매일이 행복합니다.
+                            인생겜은 라오어고요(라오어2x). 요즘에는 잠깐 잠깐 poe2 하고 있습니다.
+                        </p>
+                    </div>
+                    <button type="button" class="btn btn-primary"
+                        onclick="window.open('https://github.com/mhoo999', '_blank')">GitHub</button>
+                    <button type="button" class="btn btn-success"
+                        onclick="window.open('https://techoonology.tistory.com/', '_blank')">Blog</button>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>
