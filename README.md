@@ -19,9 +19,11 @@
       6. *우리 팀의 약속
    ### 와이어 프레임(메인페이지)
    
-   <div style="border: 2px solid #000; padding: 10px; display: inline-block;">
-    <img src="https://github.com/user-attachments/assets/d2f54b64-9f69-45f5-8fb3-95c4cfdf9c22" alt="크기변환 와이어프레임" width="300" />
-   </div>
+   <p align="center">
+  <div style="border: 2px solid #000; padding: 10px; display: inline-block;">
+    <img src="https://github.com/user-attachments/assets/d2f54b64-9f69-45f5-8fb3-95c4cfdf9c22" alt="크기변환 와이어프레임" width="300">
+  </div>
+   </p>
    
    ### 프로젝트 구조  
 ```
