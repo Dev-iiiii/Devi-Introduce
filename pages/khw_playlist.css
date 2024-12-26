@@ -104,10 +104,10 @@ body, html {
 }
 @keyframes blinkTextt {
   0%, 100% {
-    text-shadow: 4px 4px 8px rgb(172, 0, 0); /* 텍스트 쉐도우 색상 */
+    text-shadow: 4px 4px 8px rgb(172, 0, 0);
   }
   50% {
-    text-shadow: 4px 4px 8px rgb(255, 235, 9); /* 텍스트 쉐도우 색상 */
+    text-shadow: 4px 4px 8px rgb(255, 235, 9);
   }
 }
 .musicListContainer {
