@@ -18,7 +18,8 @@
       5. *우리 팀의 특징, 추구하는 목표
       6. *우리 팀의 약속
    ### 와이어 프레임(메인페이지)
-   ![와이어프레임](https://github.com/user-attachments/assets/8c4a067a-d0d9-4017-8d1f-14e77a4d0c49)
+   ![크기변환 와이어프레임](https://github.com/user-attachments/assets/d2f54b64-9f69-45f5-8fb3-95c4cfdf9c22)
+
 
    ### 프로젝트 구조  
 ```
