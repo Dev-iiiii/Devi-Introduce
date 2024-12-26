@@ -47,13 +47,23 @@
           },
           {
             url: "images/banner.jpg",
-            userName: "user2",
-            page: "pages/khw_playlist.html",
+            userName: "ymh",
+            page: "pages/ymh_playlist.html",
           },
           {
             url: "images/banner.jpg",
-            userName: "user3",
-            page: "pages/khw_playlist.html",
+            userName: "yhj",
+            page: "pages/yhj_playlist.html",
+          },
+          {
+            url: "images/banner.jpg",
+            userName: "lhs",
+            page: "pages/lhs_playlist.html",
+          },
+          {
+            url: "images/banner.jpg",
+            userName: "jyj",
+            page: "pages/jyj_playlist.html",
           },
         ];
 
@@ -102,28 +112,52 @@
 
             </div>
             `;
-            commentElement.querySelector(".commentOptions").addEventListener("click", function () {
-              const deleteButton = commentElement.querySelector(".deleteButton");
-              deleteButton.style.display = "block";
-            });
+            commentElement
+              .querySelector(".commentOptions")
+              .addEventListener("click", function () {
+                const deleteButton =
+                  commentElement.querySelector(".deleteButton");
+                  deleteButton.style.display = deleteButton.style.display === "none" ? "block" : "none";
+                });
 
-            commentElement.querySelector(".deleteButton").addEventListener("click", function () {
-              const password = prompt("비밀번호를 입력하세요.");
-              if (password === commentData.password) {
-                deleteDoc(doc(db, "comments", docSnapshot.id))
-                  .then(() => {
-                    alert("댓글이 삭제되었습니다.");
-                  })
-                  .catch((error) => {
-                    console.error("댓글 삭제 중 오류 발생:", error);
-                    alert("댓글 삭제에 실패했습니다.");
-                  });
-              } else {
-                alert("비밀번호가 일치하지 않습니다.");
-              }
-            });
+            commentElement
+              .querySelector(".deleteButton")
+              .addEventListener("click", function () {
+                const password = prompt("비밀번호를 입력하세요.");
+                if (password === commentData.password) {
+                  deleteDoc(doc(db, "comments", docSnapshot.id))
+                    .then(() => {
+                      alert("댓글이 삭제되었습니다.");
+                    })
+                    .catch((error) => {
+                      console.error("댓글 삭제 중 오류 발생:", error);
+                      alert("댓글 삭제에 실패했습니다.");
+                    });
+                } else {
+                  alert("비밀번호가 일치하지 않습니다.");
+                }
+              });
 
             commetListContainer.appendChild(commentElement);
+          });
+        });
+
+
+        const allMusicListContainer = document.querySelector(".allMusicListContainer");
+        const collections = ["khw", "ymh", "yhj", "lhs", "jyj"];
+
+        collections.forEach((collectionName) => {
+          const songsCollection = collection(db, collectionName);
+          const songsQuery = query(songsCollection, orderBy("songName"));
+
+          onSnapshot(songsQuery, (querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+              const songData = doc.data();
+              const songElement = document.createElement("div");
+              songElement.classList.add("song");
+              songElement.innerText = `${songData.songName} - ${songData.singer}`;
+              allMusicListContainer.appendChild(songElement);
+            });
           });
         });
       };
@@ -160,7 +194,6 @@
               alert("댓글 저장에 실패했습니다.");
             });
         });
-
     </script>
   </head>
   <body>
@@ -170,11 +203,10 @@
     <div class="mainBanner">
       <img class="bannerImg" src="images/banner.jpg" alt="banner" />
       <div class="mainBannerText">
-        <p>Developer + I</p>
-        <p>플레이리스트 추천</p>
-    </div>
-
-
+        <span class="mainBannerTextTitle">Developer + I &nbsp;&nbsp;&nbsp;플레이리스트 추천</span>
+        
+        <div class="allMusicListContainer"></div>
+      </div>
     </div>
 
     <div class="userCard"></div>
