@@ -114,6 +114,7 @@
             right: 50px;
         }
     </style>
+    <script src="../config.js"></script>
     <script type="module">
         // Firebase SDK 라이브러리 가져오기
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
@@ -121,16 +122,7 @@
         import { collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
         import { getDocs } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyAhZi-FUAOWTRL_DdEK1NjcZqXN4-PrhmM",
-            authDomain: "sparta-9241f.firebaseapp.com",
-            projectId: "sparta-9241f",
-            storageBucket: "sparta-9241f.firebasestorage.app",
-            messagingSenderId: "986006692771",
-            appId: "1:986006692771:web:66a129cbb63acb25967016"
-        };
-
+        const firebaseConfig = window.firebaseConfig;
 
         // Firebase 인스턴스 초기화
         const app = initializeApp(firebaseConfig);
