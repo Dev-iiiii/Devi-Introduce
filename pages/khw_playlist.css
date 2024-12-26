@@ -202,13 +202,26 @@ body, html {
   display: flex;
   width: 100%;
   padding-top: 100px;
-  justify-content: space-around;
-  
+  overflow-x: scroll;
+  padding-bottom: 40px;
+}
+
+.musicInfo::-webkit-scrollbar {
+  height: 15px;
+}
+.musicInfo::-webkit-scrollbar-track {
+  background-color: rgb(255, 255, 255);
+}
+.musicInfo::-webkit-scrollbar-thumb { 
+  background-color: rgb(117, 117, 117);
+  border-radius: 5%
+}
+.musicInfo::-webkit-scrollbar-button {
+  display: none;
 }
 
 .songInfo{
-  flex: 1; /* 각 요소가 동일한 비율로 공간을 차지하도록 설정 */
-  max-width: 27%; /* 최대 너비를 33.33%로 설정 */
+  width: 600px;
   box-sizing: border-box; /* 패딩과 보더를 포함한 전체 너비 계산 */
   margin-top: 90px;
   margin-left: 10px; /* 요소 간의 간격을 위해 약간의 여백 설정 */
@@ -217,6 +230,7 @@ body, html {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-right: 20px;
   box-shadow: 
   0 -10px 10px -5px rgba(146, 0, 0, 0.5), /* 위쪽 그림자 */
   0 10px 10px -5px rgba(146, 0, 0, 0.5);  /* 아래쪽 그림자 */
@@ -237,6 +251,8 @@ body, html {
   height: 600px; /* 원하는 높이 */
   object-fit: cover; /* 이미지 비율을 유지하면서 잘라냄 */
   border-radius: 6%;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 .songInfoText{
   display: flex;
