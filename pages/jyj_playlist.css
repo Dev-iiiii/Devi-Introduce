@@ -1,0 +1,570 @@
+/* 기본 설정 */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+  scroll-behavior: smooth;
+  background: #001f3f;
+  transition: background-color 0.3s ease;
+}
+
+/* 네비게이션 바 */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(253, 242, 221, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 2px 15px rgba(226, 190, 142, 0.2);
+}
+
+.navbar a {
+  color: #034078;
+  text-decoration: none;
+  margin: 0 20px;
+  font-size: 1.1em;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.navbar a::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #0582ca;
+  transition: width 0.3s ease;
+}
+
+.navbar a:hover {
+  color: #0582ca;
+}
+
+.navbar a:hover::after,
+.navbar a.active::after {
+  width: 100%;
+}
+
+.navbar a.active {
+  color: #c69d66;
+}
+
+/* 타이틀 텍스트 */
+.txt-title {
+  font-size: 3em;
+  color: white;
+  line-height: 1.7;
+  white-space: pre-line;
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* 섹션 기본 스타일 */
+section {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 큰 보물상자 (Projects, About) */
+.section_project,
+.section_about {
+  width: 90%;
+  max-width: 800px;
+  position: relative;
+  background: #8B4513;
+  border: 10px solid #B8860B;
+  border-radius: 0 0 30px 30px;
+  padding: 20px 15px;
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 작은 보물상자 (Playlist, Contact) */
+.treasure-box-playlist {
+  height: 400px;  /* 보물상자 전체 높이 */
+  position: relative;
+  width: 90%;
+  margin-top: 25;
+  max-width: 800px;
+}
+.treasure-box-addlist {
+  height: 550px;  /* 보물상자 전체 높이 */
+  position: relative;
+  margin-top: 210px;  /* 상단 여백 */
+  width: 90%;
+  max-width: 800px;
+}
+.treasure-box-contact {
+  height: 400px;  /* 보물상자 전체 높이 */
+  position: relative;
+  margin-top: 150px;  /* 상단 여백 */
+  width: 90%;
+  max-width: 800px;
+}
+.treasure-box-project {
+  height: 800px;  /* 보물상자 전체 높이 */
+  position: relative;
+  margin-top: 450px;  /* 상단 여백 */
+  width: 90%;
+  max-width: 800px;
+}
+.treasure-box-about {
+  height: 800px;  /* 보물상자 전체 높이 */
+  position: relative;
+  margin-top: 450px;  /* 상단 여백 */
+  width: 90%;
+  max-width: 800px;
+}
+
+.section_playlist
+{
+  width: 90%;
+  max-width: 800px;
+  height: 100%;  /* 부모 높이에 맞춤 */
+  position: relative;
+  background: #8B4513;
+  border: 10px solid #B8860B;
+  border-radius: 0 0 30px 30px;
+  padding: 20px 15px;
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section_addlist{
+  width: 90%;
+  max-width: 800px;
+  height: 450px !important;
+  position: relative;
+  background: #8B4513;
+  border: 10px solid #B8860B;
+  border-radius: 0 0 30px 30px;
+  padding: 20px 15px;
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
+}
+.section_contact {
+  width: 90%;
+  max-width: 800px;
+  height: 350px !important;
+  position: relative;
+  background: #8B4513;
+  border: 10px solid #B8860B;
+  border-radius: 0 0 30px 30px;
+  padding: 20px 15px;
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 보물상자 상단 뚜껑 (공통) */
+.section_playlist::before,
+.section_addlist::before,
+.section_contact::before,
+.section_project::before,
+.section_about::before {
+  content: '';
+  position: absolute;
+  top: -90px;
+  left: -10px;
+  right: -10px;
+  height: 70px;
+  background: #8B4513;
+  border: 10px solid #B8860B;
+  border-radius: 150px 150px 0 0;
+  border-bottom: 10px solid #B8860B;
+}
+
+/* 상단 못 장식 (공통) */
+.section_playlist::after,
+.section_addlist::after,
+.section_contact::after,
+.section_project::after,
+.section_about::after {
+  content: '• • • • • •';
+  position: absolute;
+  top: -50px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: #B8860B;
+  font-size: 24px;
+  letter-spacing: 35px;
+  z-index: 3;
+}
+
+/* 섹션 간격 조정 */
+section#playlist{
+  margin-top: 20vh;
+}
+
+section#addlist,
+section#contact,
+section#project,
+section#about {
+  margin-top: 100vh;
+}
+
+section#about {
+  margin-bottom: 200px;
+}
+
+/* Playlist 위치 조정 */
+section#playlist {
+  align-items: flex-start;
+  padding-top: 50px;
+}
+/*상자 내부요소*/
+/* 큰 보물상자 컨테이너 (Projects, About) */
+.project-container{
+  width: 100%;
+  padding: 5px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;  
+}
+.about-container {
+  width: 100%;
+  padding: 5px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+/* 작은 보물상자 컨테이너 (Playlist, Contact) */
+.playlist-container,
+.contact-container,
+.addlist-container {
+  width: 100%;
+  height: 100% !important;
+  padding: 5px;
+}
+
+/* Contact는 grid 레이아웃 사용 */
+.contact-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+/* Playlist는 flex 레이아웃 사용 */
+.playlist-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 제목 스타일 */
+.playlist-container h1,
+.addlist-container h1,
+.contact-container h1,
+.project-container h1,
+.about-container h1 {
+  text-align: center;
+  color: #FFD700;
+  font-size: 3em;
+  margin: 0 0 20px;
+  grid-column: 1 / -1;
+}
+
+/* 아이템 스타일 */
+.about-item,
+.project-item,
+.contact-item,
+.addlist-item {
+  background: rgba(139, 69, 19, 0.7);
+  padding: 12px;
+  border: 2px solid #DEB887;
+  border-radius: 8px;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 130px !important;
+}
+
+/* contact-item 내부 이미지 스타일 */
+.contact-item {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+}
+
+.contact-item img {
+  width: 100px;  /* 고정 너비 */
+  height: 100px;  /* 고정 높이 */
+  object-fit: contain;  /* 이미지 비율 유지하면서 컨테이너에 맞춤 */
+  margin-bottom: 10px;
+  border-radius: 50%;  /* 원형으로 만들기 */
+}
+
+/* 필요한 경우 이미지별 개별 스타일 */
+.githubImg {
+  background-color: white;  /* GitHub 로고용 흰색 배경 */
+}
+
+.velogImg {
+  background-color: #20C997;  /* Velog 로고용 초록색 배경 */
+}
+
+/* 아이템 제목 */
+.about-item h2,
+.project-item h2,
+.contact-item h2,
+.addlist-item h2 {
+  font-size: 1.2em;
+  margin-bottom: 8px;
+  color: #FFD700;
+  text-align: center;
+}
+
+/* 아이템 텍스트 */
+.about-item p,
+.project-item p,
+.contact-item p,
+.addlist-item p,
+.about-item ul li {
+  font-size: 0.9em;
+  line-height: 1.3;
+  color: #FFF8DC;
+  text-align: center;
+}
+
+/* About 리스트 */
+.about-item ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.about-item ul li {
+  margin-bottom: 6px;
+  padding-left: 15px;
+  position: relative;
+}
+
+/* Playlist 아이템 스타일 */
+.playlist-item {
+  width: 90%;  /* 컨테이너의 90% 너비 */
+  height: 250px;  /* 적절한 높이 설정 */
+  background: rgba(139, 69, 19, 0.7);
+  border: 2px solid #DEB887;
+  border-radius: 15px;
+  margin: 20px auto;  /* 상하 여백과 가운데 정렬 */
+  padding: 5px;
+  box-sizing: border-box;
+}
+
+/* 유튜브 영상을 위한 컨테이너 */
+.youtube-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 유튜브 iframe 스타일 */
+.youtube-container iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  border-radius: 10px;
+}
+/* 폼 스타일 */
+/* AddList 폼을 감싸는 item 스타일 */
+.addlist-form-item {
+  background: rgba(139, 69, 19, 0.7);
+  padding: 15px;
+  border: 2px solid #DEB887;
+  border-radius: 8px;
+  width: 95%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* 기존 add-form 스타일 수정 */
+.add-form {
+  
+  margin: 0;
+  padding: 10px;
+}
+
+.form-group {
+  display: flex;  /* 변경: flex로 변경하여 가로 배치 */
+  align-items: center;  /* 세로 중앙 정렬 */
+  margin-bottom: 15px;
+  gap: 10px;  /* label과 input 사이 간격 */
+}
+
+.form-group label {
+  color: #FFD700;
+  font-weight: bold;
+  min-width: 120px;  /* label 너비 고정 */
+  text-align: right;
+}
+
+.form-group input {
+  flex: 1;  /* 남은 공간 모두 차지 */
+  padding: 8px;
+  border: 2px solid #DEB887;
+  border-radius: 5px;
+  background: rgba(139, 69, 19, 0.3);
+  color: #FFF8DC;
+  font-size: 1em;
+  height: 40px;  /* 입력창 높이 통일 */
+  box-sizing: border-box;
+}
+
+.form-group input::placeholder {
+  color: #DEB887;
+}
+
+.submit-btn {
+  width: calc(100% - 130px);  /* label 너비만큼 뺀 너비 */
+  margin-left: 130px;  /* label 너비 + gap만큼 여백 */
+  height: 40px;  /* 버튼 높이 통일 */
+  background: #B8860B;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-size: 1.1em;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.submit-btn:hover {
+  background: #DAA520;
+}
+.songlist-btn {
+  width: calc(100% - 130px);  /* label 너비만큼 뺀 너비 */
+   /* label 너비 + gap만큼 여백 */
+  height: 40px;  /* 버튼 높이 통일 */
+  background: #B8860B;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-size: 1.1em;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.songlist-btn:hover {
+  background: #DAA520;
+}
+#modalOpenButton, #modalCloseButton {
+  cursor: pointer;
+}
+
+#modalContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+#modalContent {
+  background: #8B4513;
+  border: 5px solid #B8860B;
+  border-radius: 15px;
+  width: 80%;
+  max-width: 800px;
+  max-height: 80vh;
+  padding: 20px;
+  position: relative;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.modal-header h2 {
+  color: #FFD700;
+  margin: 0;
+}
+
+#modalCloseButton {
+  background: none;
+  border: none;
+  color: #FFD700;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.song-list-container {
+  padding: 10px;
+}
+
+.song-list-item {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  margin-bottom: 10px;
+  background: rgba(139, 69, 19, 0.3);
+  border: 1px solid #DEB887;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.song-list-item:hover {
+  background: rgba(139, 69, 19, 0.5);
+}
+
+.song-thumbnail {
+  width: 50px;
+  height: 50px;
+  margin-right: 15px;
+  flex-shrink: 0;
+}
+
+.song-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.song-info {
+  flex: 1;
+}
+
+.song-info h3 {
+  color: #FFD700;
+  margin: 0 0 5px 0;
+  font-size: 1.1em;
+}
+
+.song-info p {
+  color: #DEB887;
+  margin: 0;
+  font-size: 0.9em;
+}
+.hidden {
+  display: none !important;
+}

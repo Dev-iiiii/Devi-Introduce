@@ -144,13 +144,13 @@
         // Firebase 구성 정보 설정
         // For Firebase JS SDK v7.20.0 and later, measurementId is optional
         const firebaseConfig = {
-            apiKey: "AIzaSyDGZKLFCSS1l-1qd-1v6cyIB_G7dgyBle8",
-            authDomain: "sparta-d9b95.firebaseapp.com",
-            projectId: "sparta-d9b95",
-            storageBucket: "sparta-d9b95.firebasestorage.app",
-            messagingSenderId: "1059213794613",
-            appId: "1:1059213794613:web:011cd70d6016cce9a9407c",
-            measurementId: "G-BVJJZP09TE"
+            apiKey: "...",
+            authDomain: "...",
+            projectId: "...",
+            storageBucket: "...",
+            messagingSenderId: "...",
+            appId: "...",
+            measurementId: "..."
         };
 
 
@@ -170,12 +170,12 @@
                 'singer': singer_f,
                 'hyperLink': hyperLink_f
             };
-            await addDoc(collection(db, "music_list_yhj"), doc);
+            await addDoc(collection(db, "yhj"), doc);
             alert('save complete!');
             window.location.reload();
         })
 
-        let docs = await getDocs(collection(db, "music_list_yhj"));
+        let docs = await getDocs(collection(db, "yhj"));
         docs.forEach((doc) => {
             let row = doc.data();
             console.log(row);

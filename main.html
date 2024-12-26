@@ -23,6 +23,9 @@
         orderBy,
         onSnapshot,
         addDoc,
+        setDoc,
+        doc,
+        deleteDoc,
         where,
         getDocs,
       } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
@@ -37,19 +40,31 @@
         // 사용자 데이터를 사용하여 카드를 생성하고 추가
         const userCardContainer = document.querySelector(".userCard");
         const users = [
-          { url: "images/banner.jpg", userName: "khw", page: "pages/khw_playlist.html"},
-          { url: "images/banner.jpg", userName: "user2", page: "pages/khw_playlist.html" },
-          { url: "images/banner.jpg", userName: "user3", page: "pages/khw_playlist.html" }
+          {
+            url: "images/banner.jpg",
+            userName: "khw",
+            page: "pages/khw_playlist.html",
+          },
+          {
+            url: "images/banner.jpg",
+            userName: "user2",
+            page: "pages/khw_playlist.html",
+          },
+          {
+            url: "images/banner.jpg",
+            userName: "user3",
+            page: "pages/khw_playlist.html",
+          },
         ];
 
-        users.forEach(user => {
+        users.forEach((user) => {
           const userCard = document.createElement("div");
           userCard.classList.add("userCardItem");
 
           userCard.innerHTML = `
-            <img src="${user.url}" alt="${user.userName}" class="userImage" />
-            <p class="userName">${user.userName}의 플레이리스트</p>
-          `;
+              <img src="${user.url}" alt="${user.userName}" class="userImage" />
+              <p class="userName">${user.userName}의 플레이리스트</p>
+            `;
 
           userCard.addEventListener("click", () => {
             window.location.href = `${user.page}?userName=${user.userName}`;
@@ -57,11 +72,96 @@
 
           userCardContainer.appendChild(userCard);
         });
+
+        const commetListContainer = document.querySelector(".commentList");
+        const commentCollection = collection(db, "comments");
+        const commentsQuery = query(
+          commentCollection,
+          orderBy("timestamp", "desc")
+        );
+
+        onSnapshot(commentsQuery, (querySnapshot) => {
+          commetListContainer.innerHTML = "";
+
+          querySnapshot.forEach((docSnapshot) => {
+            const commentData = docSnapshot.data();
+            const commentElement = document.createElement("div");
+            commentElement.classList.add("comment");
+
+            commentElement.innerHTML = `
+            <div class="commentWrapper">
+                <span class="unknown">익명</span>
+                <span class="commentDate">${commentData.timestamp
+                  .toDate()
+                  .toLocaleString()}</span>
+                <p class="commentContent">${commentData.commentContent}</p>
+            </div>
+            <div id = "commentOptions" class="commentOptions">
+                <img class="optionDots" src="images/commentOption.png" alt="commentOptions"/>
+                <button class="deleteButton" style="display: none;">삭제</button>
+
+            </div>
+            `;
+            commentElement.querySelector(".commentOptions").addEventListener("click", function () {
+              const deleteButton = commentElement.querySelector(".deleteButton");
+              deleteButton.style.display = "block";
+            });
+
+            commentElement.querySelector(".deleteButton").addEventListener("click", function () {
+              const password = prompt("비밀번호를 입력하세요.");
+              if (password === commentData.password) {
+                deleteDoc(doc(db, "comments", docSnapshot.id))
+                  .then(() => {
+                    alert("댓글이 삭제되었습니다.");
+                  })
+                  .catch((error) => {
+                    console.error("댓글 삭제 중 오류 발생:", error);
+                    alert("댓글 삭제에 실패했습니다.");
+                  });
+              } else {
+                alert("비밀번호가 일치하지 않습니다.");
+              }
+            });
+
+            commetListContainer.appendChild(commentElement);
+          });
+        });
       };
 
+      document
+        .getElementById("saveButton")
+        .addEventListener("click", function () {
+          const commentContentInput = document
+            .getElementById("commentContentInput")
+            .value.trim();
+          const passwordInput = document
+            .getElementById("passwordInput")
+            .value.trim();
+
+          if (!commentContentInput || !passwordInput) {
+            alert("내용과 비밀번호를 입력하세요!");
+            return;
+          }
+
+          const commentCollection = collection(db, "comments");
+
+          addDoc(commentCollection, {
+            commentContent: commentContentInput,
+            password: passwordInput,
+            timestamp: new Date(),
+          })
+            .then(() => {
+              alert("저장되었습니다!");
+              document.getElementById("commentContentInput").value = "";
+              document.getElementById("passwordInput").value = "";
+            })
+            .catch((error) => {
+              console.error("댓글 저장 중 오류 발생:", error);
+              alert("댓글 저장에 실패했습니다.");
+            });
+        });
+
     </script>
-
-
   </head>
   <body>
     <div class="title">
@@ -69,22 +169,39 @@
     </div>
     <div class="mainBanner">
       <img class="bannerImg" src="images/banner.jpg" alt="banner" />
+      <div class="mainBannerText">
+        <p>Developer + I</p>
+        <p>플레이리스트 추천</p>
     </div>
 
-    <div class="userCard">
+
     </div>
+
+    <div class="userCard"></div>
 
     <div class="chatContainer">
-      <div class="chatInput">
-        <div class="inputForm">
-            <input type="text" id="albumURL" placeholder="앨범 사진 URL" />
-            <input type="text" id="songName" placeholder="노래 제목" />
-            <input type="text" id="singer" placeholder="가수" />
-            <input type="text" id="hyperLink" placeholder="하이퍼링크" />
-            <button id="saveButton">노래 저장</button>
-          </div>
+      <div class="chatInputForm">
+        <input
+          type="text"
+          id="commentContentInput"
+          class="commentContentInput"
+          placeholder="익명 방명록을 남겨주세요"
+        />
+        <input
+          type="password"
+          id="passwordInput"
+          class="passwordInput"
+          placeholder="비밀번호"
+        />
+        <button id="saveButton" class="saveButton">전송</button>
       </div>
-      <div class="chatList"></div>
+      <div class="commentList"></div>
     </div>
+
+    <footer>
+      <div class="footer-content">
+        <p>&copy; 2024 Dev I. All rights reserved.</p>
+      </div>
+    </footer>
   </body>
 </html>
