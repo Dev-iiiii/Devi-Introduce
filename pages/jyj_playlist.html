@@ -40,7 +40,7 @@ $("#addlistbtn").click(async function() {
         'hyperLink': hyperLink
     }
 
-    await addDoc(collection(db, "songlist"), doc);
+    await addDoc(collection(db, "jyj"), doc);
     alert('저장완료!');
     window.location.reload();
 });
@@ -49,7 +49,7 @@ $("#addlistbtn").click(async function() {
 $(".songlist-btn").click(async function() {
   $('.song-list-container').empty();
         // 데이터 가져오기
-        let docs = await getDocs(collection(db, "songlist"));
+        let docs = await getDocs(collection(db, "jyj"));
         console.log("데이터 가져오기 성공:", docs); 
         docs.forEach((doc) => {
             let row = doc.data();
