@@ -28,6 +28,8 @@
         addDoc,
         where,
         getDocs,
+        deleteDoc,
+        doc
       } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
       const firebaseConfig = window.firebaseConfig;
@@ -49,8 +51,13 @@
           document
             .getElementById("saveButton")
             .setAttribute("onclick", `saveSongToFirebase('${userName}')`);
+          document
+            .getElementById("deleteButton")
+            .setAttribute("onclick", `deleteSongFromFirebase('${userName}')`);
         }
       };
+
+      // saveSongToFirebase 함수 추가
 
       function getSongsFromFirebase(userName) {
         const musicListContainer = document.querySelector(
@@ -113,7 +120,7 @@
                   <p>
                       <span class="songName">${songData.songName} - </span>
                       <span class="singer">${songData.singer}</span>
-                  </p>
+                  </p>  
                 </div>
               </a>
             </div>`;
@@ -201,7 +208,59 @@
             alert("노래 중복 확인 중 오류가 발생했습니다.");
           });
       };
+      window.deleteSongFromFirebase = function (userName) {
+        const songNameToDelete = document
+          .getElementById("deleteSongName")
+          .value.trim();
+        const singerToDelete = document
+          .getElementById("deleteSinger")
+          .value.trim();
 
+        if (!songNameToDelete || !singerToDelete) {
+          alert("노래 제목과 가수 이름을 입력해주세요!");
+          return;
+        }
+
+        const songsCollection = collection(db, userName);
+        const songQuery = query(
+          songsCollection,
+          where("songName", "==", songNameToDelete),
+          where("singer", "==", singerToDelete)
+        );
+
+        getDocs(songQuery)
+          .then((querySnapshot) => {
+            if (querySnapshot.empty) {
+              alert("해당 노래를 찾을 수 없습니다.");
+              return;
+            }
+
+            querySnapshot.forEach((docSnapshot) => {
+              const songData = docSnapshot.data();
+              const songTitleFormatted = songData.songName.replace(/\s+/g, "-");
+              const songInfoElement = document.querySelector(
+                `#info-${songTitleFormatted}`
+              );
+
+              if (songInfoElement) {
+                songInfoElement.remove();
+              }
+
+              deleteDoc(doc(db, userName, docSnapshot.id))
+                .then(() => {
+                  alert("노래가 성공적으로 삭제되었습니다.");
+                })
+                .catch((error) => {
+                  console.error("노래 삭제 중 오류 발생:", error);
+                  alert("노래 삭제에 실패했습니다.");
+                });
+            });
+          })
+          .catch((error) => {
+            console.error("Firestore 조회 중 오류 발생:", error);
+            alert("노래 삭제 중 오류가 발생했습니다.");
+          });
+      };
 
       function toggleBackgroundMusic() {
         const backgroundMusic = document.getElementById("backgroundMusic");
@@ -242,7 +301,12 @@
       </div>
       <div class="introWrapper">
         <div class="musicPlayerWrapper" onclick="toggleBackgroundMusic()">
-          <img class="musicPlayer" id="playButton" src="../images/play.png" alt="play" />
+          <img
+            class="musicPlayer"
+            id="playButton"
+            src="../images/play.png"
+            alt="play"
+          />
         </div>
       </div>
     </aside>
@@ -267,6 +331,11 @@
         <input type="text" id="singer" placeholder="가수" />
         <input type="text" id="hyperLink" placeholder="하이퍼링크" />
         <button id="saveButton">노래 저장</button>
+      </div>
+      <div class="deleteForm">
+        <input type="text" id="deleteSongName" placeholder="노래 제목" />
+        <input type="text" id="deleteSinger" placeholder="가수" />
+        <button id="deleteButton">노래 삭제</button>
       </div>
     </div>
     <audio id="backgroundMusic" src="../music/Christmas Rap.mp3" loop></audio>
