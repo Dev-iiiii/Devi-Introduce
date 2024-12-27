@@ -68,3 +68,4 @@
     <td><a href="https://github.com/lamgak12">Github</a></td>
  </tr>
 </table>
+<a herf="https://youtu.be/X3oeygexqjk?si=cb2GjAsfXEsUMJo3">시연 영상</a>
