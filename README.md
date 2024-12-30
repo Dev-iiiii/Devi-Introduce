@@ -18,10 +18,10 @@
       5. *우리 팀의 특징, 추구하는 목표
       6. *우리 팀의 약속
    ### 사용한 기술 스택
-   
-      |프론트엔드|서버|버전관리|
-      |:-:|:-:|:-:|
-      |html, css, js, jQuery|firebase|github|
+      1. 프론트엔드 : html, css, javascript, jQuery
+      2. 백엔드(서버) : firebase
+      3. 버전관리 : github
+      
    ### 와이어 프레임(메인페이지)
    
    <p align="center">
